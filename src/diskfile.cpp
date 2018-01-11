@@ -386,7 +386,12 @@ list<string>* DiskFile::FindFiles(string path, string wildcard, bool recursive)
 
         list<string> *dirmatches;
         string nwwildcard="*";
-        dirmatches = DiskFile::FindFiles(fd.cFileName, nwwildcard, true);
+        // <-- Start correction
+        // Recursive call to the directory + file list function is incorrect, as the path of sub-level is not taken into account.
+        // fd.cFilename contains only the name of the folder, but not the full path starting from the root. It needs to be added.
+        //dirmatches = DiskFile::FindFiles(fd.cFileName, nwwildcard, true);
+        dirmatches = DiskFile::FindFiles(path + fd.cFileName, nwwildcard, true);
+        // End correction -->
 
         matches->merge(*dirmatches);
       }
